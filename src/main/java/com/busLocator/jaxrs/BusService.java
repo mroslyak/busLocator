@@ -1,5 +1,7 @@
 package com.busLocator.jaxrs;
 
+import com.busLocator.service.NextBusService;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -13,19 +15,30 @@ import javax.ws.rs.PathParam;
  */
 @Path("/busInfo/")
 public class BusService {
+    NextBusService nextBusService;
 
+    public void setNextBusService(NextBusService service) {
+        nextBusService = service;
+    }
     @GET
     @Path("/getRoutes/{location}/")
     public String getRoutes(@PathParam("location") String location){
 
-        return "routes" + location;
+
+        return nextBusService.getRoutes(location);
     }
     
     @GET
-    @Path("/getStops/{busNumber}")
-    public String getBusStops(@PathParam("busNumber") String busNumber){
-          return "stops";
+    @Path("/getStops/{location}/{busNumber}")
+    public String getBusStops(@PathParam("location") String location, @PathParam("busNumber") String busNumber){
+          return nextBusService.getStops(location, busNumber);
     }
    
 
+    @GET
+    @Path("/getEstimate/{location}/{fromBusStop}/{toBusStop}")
+    public String getEstimateTime(@PathParam("location") String location, @PathParam("fromBusStop") String fromBusStop, @PathParam("toBusStop") String toBusStop){
+        return nextBusService.getEstimates(location,fromBusStop,toBusStop);
+
+    }
 }

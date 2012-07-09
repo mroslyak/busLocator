@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<body copyright="All data copyright MBTA 2012.">
+    <predictions agencyTitle="MBTA" routeTitle="65" routeTag="65" stopTitle="132 Brookline Ave opp Fullerton St" stopTag="1562" dirTitleBecauseNoPredictions="Kenmore Station via Washington St.">
+    </predictions>
+    <predictions agencyTitle="MBTA" routeTitle="60" routeTag="60" stopTitle="132 Brookline Ave opp Fullerton St" stopTag="1562">
+        <direction title="Kenmore Station via Cypress St.">
+            <prediction epochTime="1341717711680" seconds="627" minutes="10" isDeparture="false" dirTag="60_1_var0" vehicle="2164" block="C60_102" tripTag="17939736" />
+            <prediction epochTime="1341721120388" seconds="4036" minutes="67" isDeparture="false" affectedByLayover="true" dirTag="60_1_var0" vehicle="2164" block="C60_102" tripTag="17939711" />
+        </direction>
+    </predictions>
+    <predictions agencyTitle="MBTA" routeTitle="19" routeTag="19" stopTitle="132 Brookline Ave opp Fullerton St" stopTag="1562" dirTitleBecauseNoPredictions="Kenmore Station via Grove Hall &amp; Ruggles Station">
+    </predictions>
+    <predictions agencyTitle="MBTA" routeTitle="8" routeTag="8" stopTitle="132 Brookline Ave opp Fullerton St" stopTag="1562">
+        <direction title="Kenmore Station via South Bay Center &amp; Ruggles Station">
+            <prediction epochTime="1341719071977" seconds="1987" minutes="33" isDeparture="false" dirTag="8_1_var1" vehicle="2236" block="C08_16" tripTag="17938422" />
+        </direction>
+        <direction title="Kenmore Station via Ruggles Station &amp; Longwood">
+            <prediction epochTime="1341721730493" seconds="4646" minutes="77" isDeparture="false" affectedByLayover="true" dirTag="8_1_var0" vehicle="2238" block="C08_17" tripTag="17938433" />
+        </direction>
+    </predictions>
+</body>

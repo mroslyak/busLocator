@@ -18,6 +18,12 @@
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
-    <bean id="busService" class="com.busLocator.jaxrs.BusService" />
+    <bean id="busService" class="com.busLocator.jaxrs.BusService" >
+        <property name="nextBusService" ref="nextBusService" />
+            </bean>
+
+    <bean id="nextBusService" class="com.busLocator.service.NextBusService" >
+
+    </bean>
 
 </beans>
