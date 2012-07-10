@@ -10,13 +10,22 @@ public class NextBusServiceTest {
         NextBusService service = new NextBusService();
         String str = service.getRoutes("mbta");
         System.out.println(str);
-        
+
+ //       service.getRoutes("mbta");
     }
     
     @Test
     public void getStops(){
         NextBusService service = new NextBusService();
         String str = service.getStops("mbta","60");
+        System.out.println(str);
+    }
+    
+    
+    @Test
+    public void getPredictions(){
+        NextBusService service = new NextBusService();
+        String str = service.getEstimates("mbta","00899","00899");
         System.out.println(str);
     }
 }

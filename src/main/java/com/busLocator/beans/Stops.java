@@ -21,8 +21,32 @@ public class Stops {
 class StopRoute {
     @XmlElement(name = "stop")
     List<Stop> stopList;
+
+    @XmlElement (name= "direction")
+    List<BusDirection> busDirectionList;
 }
 
+class BusDirection{
+    @XmlAttribute (name="tag")
+    String tag;
+    @XmlAttribute (name = "title")
+    String title;
+    @XmlAttribute (name = "name")
+    String direction;
+
+    @XmlElement (name = "useForUI")
+    boolean useForUI;
+    @XmlElement (name = "stop")
+    List<DirectionStop> stopOrderList;
+}
+
+class DirectionStop {
+    @XmlAttribute (name = "tag")
+    String tag;
+    public String toString(){
+        return tag;
+    }
+}
 class Stop {
     @XmlAttribute
     public String tag;
