@@ -47,10 +47,14 @@ public class NextBusService {
 
         }
         manager = CacheManager.create();
-        Cache memoryOnlyCache = new Cache(LONG_TERM_CACHE, 200, false, false, 3600, 3600);
-        manager.addCache(memoryOnlyCache);
-        Cache shortCache = new Cache(SHORT_TERM_CACHE, 200, false, false, 30, 30);
-        manager.addCache(shortCache);
+        if (!manager.cacheExists(LONG_TERM_CACHE)){
+            Cache memoryOnlyCache = new Cache(LONG_TERM_CACHE, 200, false, false, 3600, 3600);
+            manager.addCache(memoryOnlyCache);
+        }
+        if (!manager.cacheExists(SHORT_TERM_CACHE)){
+            Cache shortCache = new Cache(SHORT_TERM_CACHE, 200, false, false, 30, 30);
+            manager.addCache(shortCache);
+        }
 
     }
 
