@@ -1,6 +1,8 @@
 package com.busLocator;
 
 import com.busLocator.jaxrs.BusService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -16,6 +18,8 @@ import javax.xml.ws.http.HTTPBinding;
  * To change this template use File | Settings | File Templates.
  */
 public class Server {
+    private static Log logger = LogFactory.getLog(Server.class);
+
     protected Server()  {
         BusService busService = new BusService();
 
@@ -29,6 +33,7 @@ public class Server {
     }
 
     public static void main(String args[]) {
+       logger.info("Starting Server.. ");
 
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]
                 {"application.xml"});
@@ -37,7 +42,7 @@ public class Server {
         System.out.println(sfb.getAddress());
     //    sfb.create();
 //        new Server();
-        System.out.println("Server ready...");
+        logger.info("Server ready...");
         try{
         while (true){
             Thread.sleep(5 * 60 * 1000);

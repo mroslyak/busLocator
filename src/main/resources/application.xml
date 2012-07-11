@@ -15,12 +15,18 @@
     <jaxrs:server id="servicers" address="http://0.0.0.0:9000/">
         <jaxrs:serviceBeans>
             <ref bean="busService" />
+            <ref bean="rootService" />
         </jaxrs:serviceBeans>
+
     </jaxrs:server>
 
     <bean id="busService" class="com.busLocator.jaxrs.BusService" >
         <property name="nextBusService" ref="nextBusService" />
-            </bean>
+     </bean>
+
+    <bean id="rootService" class="com.busLocator.jaxrs.RootService" >
+
+    </bean>
 
     <bean id="nextBusService" class="com.busLocator.service.NextBusService" >
 

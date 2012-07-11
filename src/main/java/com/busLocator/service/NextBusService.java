@@ -2,6 +2,7 @@ package com.busLocator.service;
 
 import com.busLocator.beans.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.sf.ehcache.CacheManager;
 
 import net.sf.ehcache.Cache;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,6 +37,7 @@ public class NextBusService {
     private final String LONG_TERM_CACHE = "LongBusCache";
     private final String SHORT_TERM_CACHE = "ShortBusCache";
 
+    Log logger = LogFactory.getLog(NextBusService.class);
     Gson gson;
     JAXBContext mcontext;
     CacheManager manager;
@@ -67,6 +71,7 @@ public class NextBusService {
         Element element = memoryCache.get(location);
         if (element != null) {
             String str = (String) element.getValue();
+            logger.debug("getting cached version of Routes for " + location);
             return str;
         }
         InputStream in = null;
@@ -101,6 +106,7 @@ public class NextBusService {
         Cache memoryCache = manager.getCache(LONG_TERM_CACHE);
         Element element = memoryCache.get(location + "_" + route);
         if (element != null) {
+            logger.debug("getting cached stop information for "+location +" route="+route);
             return (Stops) element.getValue();
 
         }
@@ -139,6 +145,7 @@ public class NextBusService {
     public String getEstimates(String location, String fromBusStop, String toBusStop) {
         Cache memoryCache = manager.getCache(SHORT_TERM_CACHE);
         Element element = memoryCache.get(location + "_" + fromBusStop + "_" + toBusStop);
+        logger.info("getting time estimates for "+ location + " from stop=" +fromBusStop +" to stop=" + toBusStop );
         if (element != null) {
             String str = (String) element.getValue();
             return str;
@@ -164,7 +171,7 @@ public class NextBusService {
                     for (EstimatesDirection direction : directionList) {
                         for (EstimatesPrediction prediction : direction.getPredictionList()) {
                             if (!timeToStop.isEmpty()) {
-                                timeToStop += " \\& ";
+                                timeToStop += " & ";
                             }
                             timeToStop += prediction.getMinutes();
                         }
@@ -176,10 +183,10 @@ public class NextBusService {
             }
 
 
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             String str = gson.toJson(matchingRoutesMap);
             
-            Map<String,String> response = gson.fromJson(str,HashMap.class);
+        //    Map<String,String> response = gson.fromJson(str,HashMap.class);
             memoryCache.put(new Element(location + "_" + fromBusStop + "_" + toBusStop, str));
             return str;
         } catch (Exception e) {
@@ -212,6 +219,8 @@ public class NextBusService {
                     return true;
             }
         }
+
+
         return false;
 
     }
