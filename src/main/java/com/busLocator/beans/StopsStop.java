@@ -22,4 +22,7 @@ public class StopsStop implements Serializable{
 
     @XmlAttribute
     public String stopId;
+    
+    public String getTag(){ return tag;}
+    public String getTitle(){return title;}
 }

@@ -34,5 +34,7 @@ public class StopsBusDirection implements Serializable{
     public List<StopsDirectionStop> getStopOrderList(){
         return stopOrderList;
     }
+
+    public String getTitle(){ return title;}
     
 }

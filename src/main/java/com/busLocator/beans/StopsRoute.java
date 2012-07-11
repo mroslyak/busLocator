@@ -24,6 +24,9 @@ public class StopsRoute implements Serializable {
     public List<StopsBusDirection> getBusDirectionList(){
         return busDirectionList;
     }
+    public List<StopsStop> getStopList(){
+        return stopList;
+    }
 
 }
 

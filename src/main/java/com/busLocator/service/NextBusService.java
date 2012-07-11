@@ -102,12 +102,12 @@ public class NextBusService {
         return "error";
     }
 
-    private Stops getStopsObj(String location, String route) {
+    private List<CompleteRoute> getStopsObj(String location, String route) {
         Cache memoryCache = manager.getCache(LONG_TERM_CACHE);
         Element element = memoryCache.get(location + "_" + route);
         if (element != null) {
             logger.debug("getting cached stop information for "+location +" route="+route);
-            return (Stops) element.getValue();
+            return (List<CompleteRoute>) element.getValue();
 
         }
         //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=mbta&r=60
@@ -120,8 +120,26 @@ public class NextBusService {
             Unmarshaller m = context.createUnmarshaller();
             Stops stops = (Stops) m.unmarshal(in);
 
-            memoryCache.put(new Element(location + "_" + route, stops));
-            return stops;
+            Map<String,String> stopMap = new HashMap<String, String>();
+            for (StopsStop stop :stops.getRoute().getStopList()){
+                stopMap.put(stop.getTag(),stop.getTitle());
+            }
+
+            List<CompleteRoute> filteredRoutes = new ArrayList<CompleteRoute>();
+            for (StopsBusDirection busDirection: stops.getRoute().getBusDirectionList()){
+                CompleteRoute completeRoute = new CompleteRoute();
+                completeRoute.setDirection(busDirection.getTitle());
+                List<BusStop> busStopList = new ArrayList<BusStop>();
+                completeRoute.setStopList(busStopList);
+                filteredRoutes.add(completeRoute);
+                for(StopsDirectionStop orderedStops:busDirection.getStopOrderList()){
+                    String stopName = stopMap.get(orderedStops.toString());
+                    busStopList.add(new BusStop(orderedStops.toString(),stopName));
+                }
+            }
+            
+            memoryCache.put(new Element(location + "_" + route, filteredRoutes));
+            return filteredRoutes;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -134,7 +152,7 @@ public class NextBusService {
     }
 
     public String getStops(String location, String route) {
-        Stops stops = getStopsObj(location, route);
+        List<CompleteRoute> stops = getStopsObj(location, route);
         Gson gson = new Gson();
         String str = gson.toJson(stops);
         return str;
@@ -210,12 +228,11 @@ public class NextBusService {
      * @return
      */
     private boolean routeMatches(String location, String routeTag, String busStopTag) {
-        Stops stops = getStopsObj(location, routeTag);
+        List<CompleteRoute> stops = getStopsObj(location, routeTag);
 
-        List<StopsBusDirection> busDirectionList = stops.getRoute().getBusDirectionList();
-        for (StopsBusDirection busDirection:busDirectionList){
-            for (StopsDirectionStop stop : busDirection.getStopOrderList()){
-                if (busStopTag.equals(stop.toString()))
+        for (CompleteRoute busRoute:stops){
+            for (BusStop stop : busRoute.getStopList()){
+                if (busStopTag.equals(stop.getTag()))
                     return true;
             }
         }
