@@ -1,6 +1,7 @@
 package com.busLocator.beans;
 
 import javax.xml.bind.annotation.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,52 +14,15 @@ import java.util.List;
 
 @XmlRootElement(name = "body")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Stops {
+public class Stops implements Serializable{
     @XmlElement(name = "route")
-    StopRoute route;
-}
+    StopsRoute route;
 
-class StopRoute {
-    @XmlElement(name = "stop")
-    List<Stop> stopList;
-
-    @XmlElement (name= "direction")
-    List<BusDirection> busDirectionList;
-}
-
-class BusDirection{
-    @XmlAttribute (name="tag")
-    String tag;
-    @XmlAttribute (name = "title")
-    String title;
-    @XmlAttribute (name = "name")
-    String direction;
-
-    @XmlElement (name = "useForUI")
-    boolean useForUI;
-    @XmlElement (name = "stop")
-    List<DirectionStop> stopOrderList;
-}
-
-class DirectionStop {
-    @XmlAttribute (name = "tag")
-    String tag;
-    public String toString(){
-        return tag;
+    public StopsRoute getRoute(){
+        return route;
     }
 }
-class Stop {
-    @XmlAttribute
-    public String tag;
 
-    @XmlAttribute
-    public String title;
-
-    @XmlAttribute
-    public String stopId;
-
-
-}
 
 
 

@@ -25,7 +25,7 @@ public class NextBusServiceTest {
     @Test
     public void getPredictions(){
         NextBusService service = new NextBusService();
-        String str = service.getEstimates("mbta","00899","00899");
+        String str = service.getEstimates("mbta","899","8993");
         System.out.println(str);
     }
 }
