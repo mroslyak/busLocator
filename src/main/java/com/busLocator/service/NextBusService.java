@@ -71,7 +71,7 @@ public class NextBusService {
         Element element = memoryCache.get(location);
         if (element != null) {
             String str = (String) element.getValue();
-            logger.debug("getting cached version of Routes for " + location);
+            logger.info("getting cached version of Routes for " + location);
             return str;
         }
         InputStream in = null;
@@ -106,7 +106,7 @@ public class NextBusService {
         Cache memoryCache = manager.getCache(LONG_TERM_CACHE);
         Element element = memoryCache.get(location + "_" + route);
         if (element != null) {
-            logger.debug("getting cached stop information for "+location +" route="+route);
+            logger.info("getting cached stop information for "+location +" route="+route);
             return (List<CompleteRoute>) element.getValue();
 
         }
@@ -166,13 +166,15 @@ public class NextBusService {
         logger.info("getting time estimates for "+ location + " from stop=" +fromBusStop +" to stop=" + toBusStop );
         if (element != null) {
             String str = (String) element.getValue();
+            logger.info("got cached estimates");
             return str;
         }
 
         //http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=mbta&stopId=01562
-        InputStream in = null;//ClassLoader.getSystemResourceAsStream("xml/prediction.xml");
+        InputStream in = null;
         try {
-            URL url = new URL(NEXT_BUS_URL + "?command=predictions&a=" + location + "&stopId=" + fromBusStop);
+            String urlStr =NEXT_BUS_URL + "?command=predictions&a=" + location + "&stopId=" + fromBusStop;
+            URL url = new URL(urlStr);
             in = url.openStream();
 
             JAXBContext context = JAXBContext.newInstance(Estimates.class);
@@ -180,23 +182,37 @@ public class NextBusService {
             Unmarshaller m = context.createUnmarshaller();
             Estimates stops = (Estimates) m.unmarshal(in);
 
+            if (stops == null){
+                logger.error("failed to get estimates from url ="+urlStr);
+                return null;
+            }
             Map<String, String> matchingRoutesMap = new HashMap<String, String>();
+            String nextBusRoute = null;
+            String nextBusEstimate = null;
             for (EstimatesPredictions estimatesPrediction : stops.getPredictionsList()) {
                 if (routeMatches(location, estimatesPrediction.getRouteTag(), toBusStop)) {
                     List<EstimatesDirection> directionList = estimatesPrediction.getDirectionList();
                     String timeToStop = "";
-
+                    
                     for (EstimatesDirection direction : directionList) {
                         for (EstimatesPrediction prediction : direction.getPredictionList()) {
                             if (!timeToStop.isEmpty()) {
                                 timeToStop += " & ";
                             }
+                            if (nextBusEstimate == null ||
+                                    Integer.parseInt(nextBusEstimate) > Integer.parseInt(prediction.getMinutes())){
+                                nextBusEstimate = prediction.getMinutes();
+                                nextBusRoute = estimatesPrediction.getRouteTitle();
+                            }
                             timeToStop += prediction.getMinutes();
+
                         }
                     }
                     if (!timeToStop.isEmpty())
                         matchingRoutesMap.put(estimatesPrediction.getRouteTitle(), timeToStop);
                 }
+                matchingRoutesMap.put("nextBusRoute",nextBusRoute);
+                matchingRoutesMap.put("nextBusEstimate",nextBusEstimate);
 
             }
 
