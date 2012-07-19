@@ -26,7 +26,14 @@ public class EstimatesPrediction{
         return seconds;
     }
 
-    public String getMinutes() {
+    
+    public String getMinutes(){
+        return minutes;
+    }
+    public String getMinutesStr() {
+
+        if (affectedByLayover != null && affectedByLayover.equals("true"))
+            return minutes +"*";
         return minutes;
     }
 

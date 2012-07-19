@@ -23,9 +23,7 @@ public class BusService {
     @GET
     @Path("/getRoutes/{location}/")
     public String getRoutes(@PathParam("location") String location){
-
-
-        return nextBusService.getRoutes(location);
+       return nextBusService.getRoutes(location);
     }
     
     @GET

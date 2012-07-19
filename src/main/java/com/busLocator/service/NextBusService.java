@@ -199,12 +199,13 @@ public class NextBusService {
                             if (!timeToStop.isEmpty()) {
                                 timeToStop += " & ";
                             }
+
                             if (nextBusEstimate == null ||
                                     Integer.parseInt(nextBusEstimate) > Integer.parseInt(prediction.getMinutes())){
                                 nextBusEstimate = prediction.getMinutes();
                                 nextBusRoute = estimatesPrediction.getRouteTitle();
                             }
-                            timeToStop += prediction.getMinutes();
+                            timeToStop += prediction.getMinutesStr();
 
                         }
                     }
