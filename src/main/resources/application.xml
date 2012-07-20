@@ -16,6 +16,7 @@
         <jaxrs:serviceBeans>
             <ref bean="busService" />
             <ref bean="rootService" />
+            <ref bean="trainService" />
         </jaxrs:serviceBeans>
 
     </jaxrs:server>
@@ -24,12 +25,18 @@
         <property name="nextBusService" ref="nextBusService" />
      </bean>
 
-    <bean id="rootService" class="com.busLocator.jaxrs.RootService" >
-
+    <bean id="trainService" class="com.busLocator.jaxrs.TrainService" >
+        <property name="service" ref="mbtaService" />
     </bean>
 
-    <bean id="nextBusService" class="com.busLocator.service.NextBusService" >
+    <bean id="rootService" class="com.busLocator.jaxrs.RootService" >
+    </bean>
 
+
+    <bean id="nextBusService" class="com.busLocator.service.NextBusService" >
+    </bean>
+
+    <bean id="mbtaService" class="com.busLocator.service.MBTAService" >
     </bean>
 
 </beans>
